@@ -2,8 +2,8 @@ package project;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Rectangle;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -39,6 +39,7 @@ public class LoginPanel extends JPanel {
 
 	// 로그인 버튼
 	private JButton connectBtn;
+	private JButton cancelbtn;
 
 	public LoginPanel() {
 		InitData();
@@ -67,9 +68,9 @@ public class LoginPanel extends JPanel {
 		idPanel = new JPanel();
 		idLabel = new JLabel("ID");
 		inputId = new JTextField(10);
-
 		// 로그인 버튼
-		connectBtn = new JButton("Connect");
+		connectBtn = new JButton("확인");
+		cancelbtn = new JButton("취소");
 	}
 
 	public void setInitData() {
@@ -109,10 +110,17 @@ public class LoginPanel extends JPanel {
 		idPanel.add(inputId);
 		midPanel.add(idPanel);
 
-		// LoginBtn 컴포넌트
+		// 로그인 버튼 컴포넌트
 		connectBtn.setBackground(Color.WHITE);
-		connectBtn.setBounds(50, 300, 90, 20);
+		cancelbtn.setBackground(Color.WHITE);
+
+		connectBtn.setBounds(new Rectangle(45, 270, 100, 30));
+		cancelbtn.setBounds(new Rectangle(45, 300, 100, 30));
+		connectBtn.setFont(new java.awt.Font("SansSerif", 0, 12));
+		cancelbtn.setFont(new java.awt.Font("SansSerif", 0, 12));
+
 		midPanel.add(connectBtn);
+		midPanel.add(cancelbtn);
 
 		// 테스트 코드
 		inputIp.setText("127.0.0.1");

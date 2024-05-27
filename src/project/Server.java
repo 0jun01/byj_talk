@@ -6,20 +6,25 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 
 public class Server {
+
 	private static final int PORT = 10000;
-	ServerFrame serverFrame;
+
+	private ServerFrame serverFrame;
+	private JTextArea mainBoard;
 
 	// 서버 소켓 장치
-	ServerSocket serverSocket;
-	Socket socket;
+	private ServerSocket serverSocket;
+	private Socket socket;
 
 	// 파일 저장을 위한 장치
 	private FileWriter fileWriter;
 
 	public Server() {
 		serverFrame = new ServerFrame(this);
+		mainBoard = serverFrame.getMainBoard();
 	}
 
 	public void startServer() {
@@ -36,11 +41,18 @@ public class Server {
 	private void serverViewer(String alert) {
 		try {
 			fileWriter = new FileWriter("Thunder_talk.txt", true);
+			mainBoard.append(alert);
 			fileWriter.write(alert);
 			fileWriter.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void autoScroll() {
+		int len = mainBoard.getDocument().getLength();
+		System.out.println(len);
+		mainBoard.setCaretPosition(len);
 	}
 
 	public static void main(String[] args) {

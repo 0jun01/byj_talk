@@ -50,6 +50,14 @@ public class ServerFrame extends JFrame {
 		return mainPanel;
 	}
 
+	public JTextField getInputPort() {
+		return inputPort;
+	}
+
+	public JTextArea getMainBoard() {
+		return mainBoard;
+	}
+
 	public void InitData() {
 		// 백그라운드 패널
 		backgroundPanel = new BackgroundPanel();
@@ -98,7 +106,7 @@ public class ServerFrame extends JFrame {
 		mainPanel.setBackground(Color.WHITE);
 
 		mainPanel.add(scrollPane);
-		scrollPane.setBounds(45, 100, 300, 315);
+		scrollPane.setBounds(45, 50, 320, 340);
 		scrollPane.add(mainBoard);
 		backgroundPanel.add(mainPanel);
 		mainPanel.setVisible(false);
@@ -113,6 +121,11 @@ public class ServerFrame extends JFrame {
 				mContext.startServer();
 			}
 		});
+	}
+
+	public void autoScroll() {
+		int len = inputPort.getDocument().getLength();
+		inputPort.setCaretPosition(len);
 	}
 
 	private class BackgroundPanel extends JPanel {
