@@ -2,19 +2,22 @@ package project;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 public class LoginPanel extends JPanel {
-
+	private Client mContext;
 	// 백그라운드 패널
 	private Image backgroundImage;
 	private JPanel backgroundPanel;
@@ -39,10 +42,13 @@ public class LoginPanel extends JPanel {
 
 	// 로그인 버튼
 	private JButton connectBtn;
+	private JButton cancelbtn;
 
-	public LoginPanel() {
+	public LoginPanel(Client mContext) {
+		this.mContext = mContext;
 		InitData();
 		setInitData();
+		btnListner();
 	}
 
 	public void InitData() {
@@ -67,9 +73,9 @@ public class LoginPanel extends JPanel {
 		idPanel = new JPanel();
 		idLabel = new JLabel("ID");
 		inputId = new JTextField(10);
-
 		// 로그인 버튼
-		connectBtn = new JButton("Connect");
+		connectBtn = new JButton("확인");
+		cancelbtn = new JButton("취소");
 	}
 
 	public void setInitData() {
@@ -109,14 +115,46 @@ public class LoginPanel extends JPanel {
 		idPanel.add(inputId);
 		midPanel.add(idPanel);
 
-		// LoginBtn 컴포넌트
+		// 로그인 버튼 컴포넌트
 		connectBtn.setBackground(Color.WHITE);
-		connectBtn.setBounds(50, 300, 90, 20);
+		cancelbtn.setBackground(Color.WHITE);
+
+		connectBtn.setBounds(new Rectangle(45, 270, 100, 30));
+		cancelbtn.setBounds(new Rectangle(45, 300, 100, 30));
+		connectBtn.setFont(new java.awt.Font("SansSerif", 0, 12));
+		cancelbtn.setFont(new java.awt.Font("SansSerif", 0, 12));
+
 		midPanel.add(connectBtn);
+		midPanel.add(cancelbtn);
 
 		// 테스트 코드
 		inputIp.setText("127.0.0.1");
 		inputPort.setText("10000");
+	}
+
+	private void btnListner() {
+		connectBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				clickConnectBtn();
+			}
+		});
+	}
+
+	private void clickConnectBtn() {
+		System.out.println("버튼 클릭후 아이디 전송");
+		if ((!inputIp.getText().equals(null)) && (!inputPort.getText().equals(null))
+				&& (!inputId.getText().equals(null))) {
+
+			String ip = inputIp.getText();
+			String stringPort = inputPort.getText();
+			int port = Integer.parseInt(stringPort);
+			String id = inputId.getText();
+			JOptionPane.showMessageDialog(null, id + "님 하이요", "알림", JOptionPane.INFORMATION_MESSAGE);
+			mContext.clickConnectServerBtn(ip, port, id);
+		} else {
+			JOptionPane.showMessageDialog(null, "님아 아이디 입력하세요", "알림", JOptionPane.INFORMATION_MESSAGE);
+		}
 	}
 
 	@Override
