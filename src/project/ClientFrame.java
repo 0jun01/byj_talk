@@ -6,7 +6,7 @@ import javax.swing.JTabbedPane;
 
 public class ClientFrame extends JFrame {
 
-	Client mContext;
+	private CallBackClientService callbackService;
 
 	// 탭
 	private JTabbedPane tabPane;
@@ -21,14 +21,18 @@ public class ClientFrame extends JFrame {
 	// 메세지 창
 	private MessagePanel messagePanel;
 
-	public ClientFrame(Client mContext) {
-		this.mContext = mContext;
+	public ClientFrame(CallBackClientService callbackService) {
+		this.callbackService = callbackService;
 		InitData();
 		setInitLayout();
 	}
 
+	public LoginPanel getLogPanel() {
+		return logPanel;
+	}
+
 	public void InitData() {
-		logPanel = new LoginPanel(mContext);
+		logPanel = new LoginPanel(callbackService);
 		mainPanel = new JPanel();
 		messagePanel = new MessagePanel();
 		tabPane = new JTabbedPane(JTabbedPane.TOP);

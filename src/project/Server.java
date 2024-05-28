@@ -8,6 +8,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
@@ -15,6 +17,9 @@ import javax.swing.JTextArea;
 public class Server {
 
 	private static final int PORT = 10000;
+
+	// 접속된 유저 벡터
+	private Vector<ClientHandler> connecteduser = new Vector<>();
 
 	private ServerFrame serverFrame;
 	private JTextArea mainBoard;
@@ -57,8 +62,10 @@ public class Server {
 						serverViewer("[알림] 사용자 접속 대기중 \n");
 						ClientHandler user = new ClientHandler(socket);
 						user.start();
+
 					} catch (IOException e) {
 						// 서버 중지
+						System.out.println("오류");
 						serverViewer("[에러] 접속 에러!!!!! \n");
 					}
 				}
@@ -111,7 +118,6 @@ public class Server {
 				// 입출력 장치
 				in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-
 				sendInFormation();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -120,14 +126,30 @@ public class Server {
 
 		private void sendInFormation() {
 			try {
-				if (id != null) {
-					id = in.readLine();
-					serverViewer("[접속] " + id + "가 입장!");
-				}
+				id = in.readLine();
+				serverViewer("[접속]" + id + "님\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
+
+//		@Override
+//		public void run() {
+//
+//			try {
+//				while (true) {
+//					String str = in.readLine();
+//				}
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		
+//		private void checkProtocol(String str) {
+//			StringTokenizer tokenizer = new StringTokenizer(str, "/");
+//			
+//	
+//		}
 
 	}
 

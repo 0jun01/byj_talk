@@ -9,7 +9,10 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.Buffer;
 
-public class Client {
+public class Client implements CallBackClientService {
+
+	// 프레임 창
+	private ClientFrame clientFrame;
 
 	// 소켓 장치
 	private Socket socket;
@@ -35,8 +38,16 @@ public class Client {
 		this.ip = ip;
 		this.port = port;
 		this.id = id;
-		connectNetwork();
-		connectIO();
+		try {
+			connectNetwork();
+			connectIO();
+
+			writer.write(id.trim() + "\n");
+			writer.flush();
+			// clientFrame.getLogPanel().getConnectBtn().setEnabled(false);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// 소켓 장치 연결
@@ -87,6 +98,12 @@ public class Client {
 
 	public static void main(String[] args) {
 		new Client();
+	}
+
+	@Override
+	public void clickSendMessageBtn(String messageText) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

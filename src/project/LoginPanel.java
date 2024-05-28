@@ -17,7 +17,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 public class LoginPanel extends JPanel {
-	private Client mContext;
+	private CallBackClientService callbackService;
 	// 백그라운드 패널
 	private Image backgroundImage;
 	private JPanel backgroundPanel;
@@ -44,11 +44,15 @@ public class LoginPanel extends JPanel {
 	private JButton connectBtn;
 	private JButton cancelbtn;
 
-	public LoginPanel(Client mContext) {
-		this.mContext = mContext;
+	public LoginPanel(CallBackClientService callbackService) {
+		this.callbackService = callbackService;
 		InitData();
 		setInitData();
 		btnListner();
+	}
+
+	public JButton getConnectBtn() {
+		return connectBtn;
 	}
 
 	public void InitData() {
@@ -151,7 +155,7 @@ public class LoginPanel extends JPanel {
 			int port = Integer.parseInt(stringPort);
 			String id = inputId.getText();
 			JOptionPane.showMessageDialog(null, id + "님 하이요", "알림", JOptionPane.INFORMATION_MESSAGE);
-			mContext.clickConnectServerBtn(ip, port, id);
+			callbackService.clickConnectServerBtn(ip, port, id);
 		} else {
 			JOptionPane.showMessageDialog(null, "님아 아이디 입력하세요", "알림", JOptionPane.INFORMATION_MESSAGE);
 		}

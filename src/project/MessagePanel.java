@@ -62,7 +62,7 @@ public class MessagePanel extends JPanel {
 		backgroundPanel.setLayout(null);
 		add(backgroundPanel);
 
-//		mainMessageBox.setEnabled(false);
+		mainMessageBox.setEnabled(false);
 		mainPanel.setBounds(40, 20, 300, 350);
 		mainPanel.setBackground(Color.WHITE);
 		mainPanel.add(scrollPane);
@@ -71,7 +71,7 @@ public class MessagePanel extends JPanel {
 		add(mainPanel);
 
 		sendMessageBtn.setBackground(Color.WHITE);
-//		sendMessageBtn.setEnabled(false);
+		sendMessageBtn.setEnabled(false);
 		bottomPanel.setBounds(43, 380, 294, 35);
 		bottomPanel.setBackground(Color.WHITE);
 		bottomPanel.add(writeMessageBox);

@@ -12,7 +12,7 @@ public interface CallBackClientService {
 	void clickSendMessageBtn(String messageText);
 
 //	void clickSendSecretMessageBtn(String msg);
-//
+
 //	void clickMakeRoomBtn(String roomName);
 //
 //	void clickOutRoomBtn(String roomName);
