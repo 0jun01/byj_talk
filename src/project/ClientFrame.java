@@ -1,5 +1,6 @@
 package project;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -16,7 +17,9 @@ public class ClientFrame extends JFrame {
 
 	// 로그인 창
 	private LoginPanel logPanel;
+
 	// 대기실 창
+	private WaitingRoomPanel waitingRoom;
 
 	// 메세지 창
 	private MessagePanel messagePanel;
@@ -27,6 +30,10 @@ public class ClientFrame extends JFrame {
 		setInitLayout();
 	}
 
+	public MessagePanel getMessagePanel() {
+		return messagePanel;
+	}
+
 	public LoginPanel getLogPanel() {
 		return logPanel;
 	}
@@ -34,7 +41,8 @@ public class ClientFrame extends JFrame {
 	public void InitData() {
 		logPanel = new LoginPanel(callbackService);
 		mainPanel = new JPanel();
-		messagePanel = new MessagePanel();
+		messagePanel = new MessagePanel(callbackService);
+		waitingRoom = new WaitingRoomPanel(callbackService);
 		tabPane = new JTabbedPane(JTabbedPane.TOP);
 	}
 
@@ -53,6 +61,8 @@ public class ClientFrame extends JFrame {
 		tabPane.addTab("로그인", null, logPanel, null);
 
 		tabPane.addTab("채팅", null, messagePanel, null);
+
+		tabPane.addTab("대화상대", null, waitingRoom, null);
 
 		setVisible(true);
 

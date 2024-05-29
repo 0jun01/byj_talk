@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.ScrollPane;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -15,6 +17,8 @@ import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
 public class MessagePanel extends JPanel {
+
+	// TODO 키보드 입력키 받기 만 하면 됨
 
 	// 백그라운드 이미지 컴포넌트
 	private Image backgroundImage;
@@ -34,9 +38,21 @@ public class MessagePanel extends JPanel {
 	// 전송 버튼
 	private JButton sendMessageBtn;
 
-	public MessagePanel() {
+	private CallBackClientService callBackService;
+
+	public MessagePanel(CallBackClientService callBackClientService) {
+		this.callBackService = callBackClientService;
 		initData();
 		setInitLayout();
+		initListner();
+	}
+
+	public JTextArea getMainMessageBox() {
+		return mainMessageBox;
+	}
+
+	public JButton getSendMessageBtn() {
+		return sendMessageBtn;
 	}
 
 	public void initData() {
@@ -62,7 +78,7 @@ public class MessagePanel extends JPanel {
 		backgroundPanel.setLayout(null);
 		add(backgroundPanel);
 
-		mainMessageBox.setEnabled(false);
+		mainMessageBox.setEnabled(true);
 		mainPanel.setBounds(40, 20, 300, 350);
 		mainPanel.setBackground(Color.WHITE);
 		mainPanel.add(scrollPane);
@@ -71,7 +87,7 @@ public class MessagePanel extends JPanel {
 		add(mainPanel);
 
 		sendMessageBtn.setBackground(Color.WHITE);
-		sendMessageBtn.setEnabled(false);
+		sendMessageBtn.setEnabled(true);
 		bottomPanel.setBounds(43, 380, 294, 35);
 		bottomPanel.setBackground(Color.WHITE);
 		bottomPanel.add(writeMessageBox);
@@ -84,14 +100,28 @@ public class MessagePanel extends JPanel {
 		sendMessageBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-
+				System.out.println("하위");
+				sendMessage();
 			}
 		});
+		writeMessageBox.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					sendMessage();
+				}
+			}
+
+		});
+
 	}
 
 	private void sendMessage() {
 		if (!writeMessageBox.getText().equals(null)) {
 			String message = writeMessageBox.getText();
+			callBackService.clickSendMessageBtn(message);
+			writeMessageBox.setText("");
+			writeMessageBox.requestFocus();
 		}
 	}
 

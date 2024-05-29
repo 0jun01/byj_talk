@@ -55,6 +55,10 @@ public class LoginPanel extends JPanel {
 		return connectBtn;
 	}
 
+	public JButton getCancelbtn() {
+		return cancelbtn;
+	}
+
 	public void InitData() {
 		// 백그라운드 이미지 컴포넌트
 		backgroundImage = new ImageIcon("img/loginBack.jpg").getImage();

@@ -8,11 +8,19 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.Buffer;
+import java.util.StringTokenizer;
 
-public class Client implements CallBackClientService {
+import javax.swing.JButton;
+import javax.swing.JTextArea;
+
+public class Client implements CallBackClientService, ProtocolImpl {
 
 	// 프레임 창
 	private ClientFrame clientFrame;
+
+	// client의 화면 부분의 컴포넌트를 멤버변수로 가져와 담을 변수
+	private JTextArea mainMessageBox;
+	private JButton sendMessageBtn;
 
 	// 소켓 장치
 	private Socket socket;
@@ -29,11 +37,21 @@ public class Client implements CallBackClientService {
 	private String id;
 	private String name;
 
+	// 토크나이저 사용 변수
+	private String protocol;
+	private String from;
+	private String message;
+
+	// 완
 	public Client() {
-		new ClientFrame(this);
+		clientFrame = new ClientFrame(this);
+		mainMessageBox = clientFrame.getMessagePanel().getMainMessageBox();
+		sendMessageBtn = clientFrame.getMessagePanel().getSendMessageBtn();
 	}
 
 	// connect버튼을 눌렀을때 실행된다.
+	// 완
+	@Override
 	public void clickConnectServerBtn(String ip, int port, String id) {
 		this.ip = ip;
 		this.port = port;
@@ -44,13 +62,14 @@ public class Client implements CallBackClientService {
 
 			writer.write(id.trim() + "\n");
 			writer.flush();
-			// clientFrame.getLogPanel().getConnectBtn().setEnabled(false);
+			clientFrame.setTitle("[Thunder Talk " + id + "님 ]");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	// 소켓 장치 연결
+	// 완
 	private void connectNetwork() {
 		try {
 			socket = new Socket(ip, port);
@@ -62,15 +81,19 @@ public class Client implements CallBackClientService {
 	}
 
 	// 입출력 장치 연결!
+	// 완
 	private void connectIO() {
 		try {
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+
+			readThread();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
+	// 서버측으로부터 온 데이터 읽기
 	private void readThread() {
 		new Thread(new Runnable() {
 
@@ -79,6 +102,8 @@ public class Client implements CallBackClientService {
 				while (true) {
 					try {
 						String msg = reader.readLine();
+						mainMessageBox.append(msg + "\n");
+						// checkProtocol(msg);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -87,6 +112,7 @@ public class Client implements CallBackClientService {
 		}).start();
 	}
 
+	// 완
 	private void writer(String str) {
 		try {
 			writer.write(str + "\n");
@@ -96,14 +122,38 @@ public class Client implements CallBackClientService {
 		}
 	}
 
-	public static void main(String[] args) {
-		new Client();
+//	private void checkProtocol(String msg) {
+//		StringTokenizer tokenizer = new StringTokenizer(msg, "/");
+//
+//		protocol = tokenizer.nextToken();
+//		from = tokenizer.nextToken();
+//
+//		if (protocol.equals("Chatting")) {
+//			message = tokenizer.nextToken();
+//			chatting();
+//		}
+//
+//	}
+
+	@Override
+	public void chatting() {
+
+	}
+
+	// 완
+	@Override
+	public void clickSendMessageBtn(String messageText) {
+		writer(id + " : " + messageText);
 	}
 
 	@Override
-	public void clickSendMessageBtn(String messageText) {
-		// TODO Auto-generated method stub
+	public void newUser() {
+		writer(id + "님이 접속함\n");
 
+	}
+
+	public static void main(String[] args) {
+		new Client();
 	}
 
 }
