@@ -116,8 +116,8 @@ public class Client implements CallBackClientService, ProtocolImpl {
 				while (true) {
 					try {
 						String msg = reader.readLine();
-						//checkProtocol(msg);
-						mainMessageBox.append(msg + "\n");
+						checkProtocol(msg);
+						// mainMessageBox.append(msg + "\n");
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -157,9 +157,9 @@ public class Client implements CallBackClientService, ProtocolImpl {
 	@Override
 	public void chatting() {
 		if (id.equals(from)) {
-			mainMessageBox.setText(mainMessageBox.getText() + message + "\n");
+			mainMessageBox.setText(mainMessageBox.getText() + "[나] \n" + message + "\n");
 		} else if (!id.equals(from)) {
-			mainMessageBox.append("[상대] \n" + message + "\n");
+			mainMessageBox.append("[상대] \n" + id + " : " + message + "\n");
 		}
 	}
 
