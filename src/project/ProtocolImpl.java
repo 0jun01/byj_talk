@@ -18,5 +18,5 @@ public interface ProtocolImpl {
 //
 	void newUser();
 //
-//	void connectedUser();
+	void connectedUser();
 }

@@ -8,9 +8,12 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.Buffer;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
+import java.util.Vector;
 
 import javax.swing.JButton;
+import javax.swing.JList;
 import javax.swing.JTextArea;
 
 public class Client implements CallBackClientService, ProtocolImpl {
@@ -42,14 +45,25 @@ public class Client implements CallBackClientService, ProtocolImpl {
 	private String from;
 	private String message;
 
+	// 유저목록
+	ArrayList<String> NickNameList = new ArrayList<>(); // 유저 목록 저장
+
+	private JList<String> userList;
+
+	private Vector<String> userIdList;
+
 	// 완
 	public Client() {
 		clientFrame = new ClientFrame(this);
 		mainMessageBox = clientFrame.getMessagePanel().getMainMessageBox();
 		sendMessageBtn = clientFrame.getMessagePanel().getSendMessageBtn();
+
+		userList = clientFrame.getWaitingRoom().userList;
+		userIdList = clientFrame.getWaitingRoom().userIdVector;
 	}
 
 	// connect버튼을 눌렀을때 실행된다.
+	// clientFrame로부터 닉네임, 아이피, 포트 값을 받아온다.
 	// 완
 	@Override
 	public void clickConnectServerBtn(String ip, int port, String id) {
@@ -102,8 +116,8 @@ public class Client implements CallBackClientService, ProtocolImpl {
 				while (true) {
 					try {
 						String msg = reader.readLine();
+						//checkProtocol(msg);
 						mainMessageBox.append(msg + "\n");
-						// checkProtocol(msg);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -122,33 +136,51 @@ public class Client implements CallBackClientService, ProtocolImpl {
 		}
 	}
 
-//	private void checkProtocol(String msg) {
-//		StringTokenizer tokenizer = new StringTokenizer(msg, "/");
-//
-//		protocol = tokenizer.nextToken();
-//		from = tokenizer.nextToken();
-//
-//		if (protocol.equals("Chatting")) {
-//			message = tokenizer.nextToken();
-//			chatting();
-//		}
-//
-//	}
+	private void checkProtocol(String msg) {
+		StringTokenizer tokenizer = new StringTokenizer(msg, "/");
+
+		protocol = tokenizer.nextToken();
+		from = tokenizer.nextToken();
+
+		if (protocol.equals("Chatting")) {
+			message = tokenizer.nextToken();
+			chatting();
+
+		} else if (protocol.equals("NewUser")) {
+			newUser();
+		} else if (protocol.equals("ConnectedUser")) {
+			connectedUser();
+		}
+
+	}
 
 	@Override
 	public void chatting() {
-
+		if (id.equals(from)) {
+			mainMessageBox.setText(mainMessageBox.getText() + message + "\n");
+		} else if (!id.equals(from)) {
+			mainMessageBox.append("[상대] \n" + message + "\n");
+		}
 	}
 
 	// 완
 	@Override
 	public void clickSendMessageBtn(String messageText) {
-		writer(id + " : " + messageText);
+		writer("Chatting/" + id + "/" + messageText);
 	}
 
 	@Override
 	public void newUser() {
-		writer(id + "님이 접속함\n");
+		if (!from.equals(this.id)) {
+			userIdList.add(from);
+			userList.setListData(userIdList);
+		}
+	}
+
+	@Override
+	public void connectedUser() {
+		userIdList.add(from);
+		userList.setListData(userIdList);
 
 	}
 

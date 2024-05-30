@@ -24,9 +24,9 @@ public class WaitingRoomPanel extends JPanel {
 	private JPanel userListPanel;
 
 	// 유저
-	private JList<String> userList;
+	public JList<String> userList;
 
-	private Vector<String> userIdVector = new Vector<>();
+	public Vector<String> userIdVector = new Vector<>();
 
 	private CallBackClientService callBackClientService;
 
@@ -53,6 +53,8 @@ public class WaitingRoomPanel extends JPanel {
 		userListPanel.setBounds(130, 30, 120, 400);
 		userListPanel.setBackground(Color.WHITE);
 		userListPanel.setBorder(new TitledBorder(new LineBorder(Color.BLACK, 3), "user List"));
+//		userIdVector.add("영준아 쏴라");
+		userList.setListData(userIdVector);
 		userListPanel.add(userList);
 		add(userListPanel);
 

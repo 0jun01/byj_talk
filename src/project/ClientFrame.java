@@ -38,6 +38,10 @@ public class ClientFrame extends JFrame {
 		return logPanel;
 	}
 
+	public WaitingRoomPanel getWaitingRoom() {
+		return waitingRoom;
+	}
+
 	public void InitData() {
 		logPanel = new LoginPanel(callbackService);
 		mainPanel = new JPanel();
@@ -62,9 +66,11 @@ public class ClientFrame extends JFrame {
 
 		tabPane.addTab("채팅", null, messagePanel, null);
 
-		tabPane.addTab("대화상대", null, waitingRoom, null);
+		tabPane.addTab("유저목록", null, waitingRoom, null);
 
 		setVisible(true);
 
 	}
+	
+	
 }

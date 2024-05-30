@@ -6,9 +6,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -21,6 +21,7 @@ public class Server {
 
 	// 접속된 유저 벡터
 	private static Vector<ClientHandler> connecteduser = new Vector<>();
+	private static ArrayList<String> nickNameList = new ArrayList<>();
 
 	private ServerFrame serverFrame;
 	private JTextArea mainBoard;
@@ -29,7 +30,10 @@ public class Server {
 	private ServerSocket serverSocket;
 	private Socket socket;
 
+	// 토큰나이저 사용변수
 	private String message;
+	private String protocol;
+	private String from;
 
 	// 파일 저장을 위한 장치
 	private FileWriter fileWriter;
@@ -74,7 +78,7 @@ public class Server {
 						System.out.println("ip, port, id 전송 완료");
 						serverViewer("[알림] 사용자 접속 대기중 \n");
 						ClientHandler user = new ClientHandler(socket);
-						connecteduser.add(user);
+//						connecteduser.add(user);
 						user.start();
 
 					} catch (IOException e) {
@@ -87,10 +91,8 @@ public class Server {
 		}).start();
 	}
 
-	private static void broadcastMessage(String message) {
-		System.out.println("0S");
+	private void broadcastMessage(String message) {
 		for (int i = 0; i < connecteduser.size(); i++) {
-			System.out.println("1");
 			ClientHandler user = connecteduser.elementAt(i);
 			user.writer(message);
 		}
@@ -106,6 +108,11 @@ public class Server {
 		}
 	}
 
+	public void removeClient(ClientHandler client, String nickName) {
+		connecteduser.removeElement(client);
+		nickNameList.remove(nickName);
+
+	}
 //	public void autoScroll() {
 //		boolean flag;
 //		while (true) {
@@ -150,12 +157,11 @@ public class Server {
 		private void sendInFormation() {
 			try {
 				id = in.readLine();
-				if (id != null) {
-					serverViewer("[접속] " + id + "님\n");
-				} else {
-					socket.close();
-					return;
-				}
+				serverViewer("[접속] " + id + "님\n");
+
+				newUser();
+
+				connectedUser();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -164,15 +170,26 @@ public class Server {
 		@Override
 		public void run() {
 			try {
-				String str;
-				while ((str = in.readLine()) != null) {
+
+				while (true) {
+					String str = in.readLine();
 					mainBoard.append(str + "\n");
-					broadcastMessage(str);
-					System.out.println(str);
+					checkProtocol(str);
 				}
 			} catch (IOException e) {
 				serverViewer(id + "님이 연결을 끊음\n");
 				e.printStackTrace();
+			}
+		}
+
+		private void checkProtocol(String str) {
+			StringTokenizer tokenizer = new StringTokenizer(str, "/");
+
+			protocol = tokenizer.nextToken();
+			from = tokenizer.nextToken();
+			if (protocol.equals("Chatting")) {
+				message = tokenizer.nextToken();
+				chatting();
 			}
 		}
 
@@ -187,21 +204,29 @@ public class Server {
 
 		@Override
 		public void chatting() {
-			serverViewer(id + " : " + message);
-
-			try {
-				out.write(message);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			serverViewer(id + " : " + message + "\n");
+			broadcastMessage("Chatting/" + id + "/" + message);
+//			try {
+//				out.write(message);
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
 
 		}
 
 		@Override
 		public void newUser() {
 			connecteduser.add(this);
+			broadcastMessage("NewUser/" + id);
 		}
 
+		@Override
+		public void connectedUser() {
+			for (int i = 0; i < connecteduser.size(); i++) {
+				ClientHandler user = connecteduser.elementAt(i);
+				writer("ConnectedUser/" + user.id);
+			}
+		}
 	}
 
 	public static void main(String[] args) {
