@@ -47,7 +47,7 @@ public class Client implements CallBackClientService, ProtocolImpl {
 
 	// 유저목록
 	ArrayList<String> NickNameList = new ArrayList<>(); // 유저 목록 저장
-
+	
 	private JList<String> userList;
 
 	private Vector<String> userIdList;
@@ -148,6 +148,7 @@ public class Client implements CallBackClientService, ProtocolImpl {
 
 		} else if (protocol.equals("NewUser")) {
 			newUser();
+			mainMessageBox.append(from + "님 입장 \n");
 		} else if (protocol.equals("ConnectedUser")) {
 			connectedUser();
 		}
@@ -159,7 +160,7 @@ public class Client implements CallBackClientService, ProtocolImpl {
 		if (id.equals(from)) {
 			mainMessageBox.setText(mainMessageBox.getText() + "[나] \n" + message + "\n");
 		} else if (!id.equals(from)) {
-			mainMessageBox.append("[상대] \n" + id + " : " + message + "\n");
+			mainMessageBox.append("[상대] \n" + from + " : " + message + "\n");
 		}
 	}
 

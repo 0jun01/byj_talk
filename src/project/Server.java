@@ -206,11 +206,6 @@ public class Server {
 		public void chatting() {
 			serverViewer(id + " : " + message + "\n");
 			broadcastMessage("Chatting/" + id + "/" + message);
-//			try {
-//				out.write(message);
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
 
 		}
 

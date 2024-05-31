@@ -1,6 +1,7 @@
 package project;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.ScrollPane;
@@ -34,6 +35,7 @@ public class ServerFrame extends JFrame {
 	private JTextField inputPort;
 	private JButton connectBtn;
 	private ImageIcon btnIcon;
+	private ImageIcon btnIcon2;
 
 	public ServerFrame(Server mContext) {
 		this.mContext = mContext;
@@ -73,6 +75,7 @@ public class ServerFrame extends JFrame {
 		portLabel = new JLabel("PORT NUMBER");
 		inputPort = new JTextField(10);
 		btnIcon = new ImageIcon("img/button.png");
+		btnIcon2 = new ImageIcon("img/button2.png");
 		connectBtn = new JButton(btnIcon);
 
 		// 임시포트
@@ -90,6 +93,11 @@ public class ServerFrame extends JFrame {
 		backgroundPanel.setSize(getWidth(), getHeight());
 		backgroundPanel.setLayout(null);
 		add(backgroundPanel);
+		
+		// 버튼
+		connectBtn.setRolloverIcon(btnIcon2);
+		connectBtn.setBorderPainted(false);
+		connectBtn.setPreferredSize(new Dimension(54,23));
 
 		// 포트패널 컴포넌트
 		portLabel.setForeground(Color.white);
